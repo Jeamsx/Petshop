@@ -1,0 +1,72 @@
+BEGIN
+    -- Tabla de Usuario
+    EXECUTE IMMEDIATE 'CREATE TABLE Usuario (
+        usuario_id NUMBER PRIMARY KEY,
+        nombre_usuario VARCHAR2(50) NOT NULL,
+        email VARCHAR2(100) NOT NULL,
+        contrasena VARCHAR2(255) NOT NULL
+    )';
+
+    -- Tabla de Rol
+    EXECUTE IMMEDIATE 'CREATE TABLE Rol (
+        rol_id NUMBER PRIMARY KEY,
+        nombre_rol VARCHAR2(50) NOT NULL
+    )';
+
+    -- Tabla de Usuario_Rol
+    EXECUTE IMMEDIATE 'CREATE TABLE Usuario_Rol (
+        usuario_rol_id NUMBER PRIMARY KEY,
+        usuario_id NUMBER REFERENCES Usuario(usuario_id),
+        rol_id NUMBER REFERENCES Rol(rol_id)
+    )';
+
+    -- Tabla de Categoria
+    EXECUTE IMMEDIATE 'CREATE TABLE Categoria (
+        categoria_id NUMBER PRIMARY KEY,
+        nombre_categoria VARCHAR2(50) NOT NULL
+    )';
+
+    -- Tabla de Producto_Servicio
+    EXECUTE IMMEDIATE 'CREATE TABLE Producto_Servicio (
+        ps_id NUMBER PRIMARY KEY,
+        nombre_ps VARCHAR2(100) NOT NULL,
+        descripcion VARCHAR2(255),
+        precio NUMBER NOT NULL,
+        categoria_id NUMBER REFERENCES Categoria(categoria_id)
+    )';
+
+    -- Tabla de Orden
+    EXECUTE IMMEDIATE 'CREATE TABLE Orden (
+        orden_id NUMBER PRIMARY KEY,
+        fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        estado VARCHAR2(50) NOT NULL,
+        usuario_id NUMBER REFERENCES Usuario(usuario_id)
+    )';
+
+    -- Tabla de Detalle_Orden
+    EXECUTE IMMEDIATE 'CREATE TABLE Detalle_Orden (
+        detalle_orden_id NUMBER PRIMARY KEY,
+        orden_id NUMBER REFERENCES Orden(orden_id),
+        ps_id NUMBER REFERENCES Producto_Servicio(ps_id),
+        cantidad NUMBER NOT NULL,
+        subtotal NUMBER NOT NULL
+    )';
+
+    -- Tabla de Inventario
+    EXECUTE IMMEDIATE 'CREATE TABLE Inventario (
+        inventario_id NUMBER PRIMARY KEY,
+        ps_id NUMBER REFERENCES Producto_Servicio(ps_id),
+        cantidad_disponible NUMBER NOT NULL
+    )';
+
+    -- Tabla de Carrito
+    EXECUTE IMMEDIATE 'CREATE TABLE Carrito (
+        carrito_id NUMBER PRIMARY KEY,
+        usuario_id NUMBER REFERENCES Usuario(usuario_id),
+        ps_id NUMBER REFERENCES Producto_Servicio(ps_id),
+        cantidad NUMBER NOT NULL
+    )';
+
+    DBMS_OUTPUT.PUT_LINE('Tablas creadas con éxito.');
+END;
+/
